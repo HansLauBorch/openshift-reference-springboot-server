@@ -51,6 +51,18 @@ fork/export:
  * change the ```info.links``` in ```application.yml``` to match that of your application
  * remove the example database code (migrations under ```src/main/resource/db/migrations```), the Counter-classes in the controllers, health and service packages and the database config in ```application.yml```
 
+## Custom configuration
+
+This section describes custom configration within this application.
+
+### Database: maximum pool size
+
+**Config:** `spring.datasource.hikari.maximumPoolSize`
+
+Default `maxmimumPoolSize` for Hikary is **10**. This has been reduced to **3** in this application.
+
+* Read more about [pool sizing here](https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing).
+* Frequently used configurations for [Hikary](https://github.com/brettwooldridge/HikariCP#frequently-used).
 
 # What is Covered in the Application?
 

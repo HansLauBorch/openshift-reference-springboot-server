@@ -7,6 +7,9 @@ info:
 spring:
     profiles:
         active: local
+    datasource:
+        # Change the maximum pool size if your application needs it.
+        hikari.maximumPoolSize: 3
 
 logging:
     level:
