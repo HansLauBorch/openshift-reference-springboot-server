@@ -7,9 +7,7 @@ info:
 spring:
     profiles:
         active: local
-    datasource:
-        # Change the maximum pool size if your application needs it.
-        hikari.maximumPoolSize: 3
+
 
 logging:
     level:
@@ -28,6 +26,9 @@ spring:
     username: ${refapp.datasource.username:username}
     password: ${refapp.datasource.password:password}
 
+
+keepalive:
+    host: "http://localhost:8080"
 
 management:
     server.port: 8081

@@ -1,18 +1,17 @@
 package no.skatteetaten.aurora.openshift.reference.springboot.controllers;
 
-import static no.skatteetaten.aurora.AuroraMetrics.StatusValue.CRITICAL;
-import static no.skatteetaten.aurora.AuroraMetrics.StatusValue.OK;
-
-import java.time.Duration;
-import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 /*
  * An example controller that shows how to do a REST call and how to do an operation with a operations metrics
@@ -21,42 +20,35 @@ import org.springframework.web.client.RestTemplate;
 @RestController()
 public class KeepAliveController {
 
-    private static final String SOMETIMES = "sometimes";
-    private static final int SECOND = 1000;
+
+    private Logger logger = LoggerFactory.getLogger(KeepAliveController.class);
     private final String podName;
     private final String auroraVersion;
-    private final RestTemplateBuilder restTemplateBuilder;
+    private final RestTemplate restTemplate;
 
     public KeepAliveController(
         @Value("${pod.name:localhost}") String podName,
         @Value("${aurora.version:local-dev}") String auroraVersion,
-        RestTemplateBuilder restTemplateBuilder) {
+        RestTemplate restTemplate) {
 
-        this.restTemplateBuilder = restTemplateBuilder;
+        this.restTemplate = restTemplate;
         this.podName = podName;
         this.auroraVersion = auroraVersion;
     }
 
-    @GetMapping("/ka/server")
-    public Map<String, Object> serveTest() {
-
+    @GetMapping("/keepalive/server")
+    public Map<String, Object> serveTest(HttpServletRequest request) {
         return Map.of(
             "version", auroraVersion,
             "name", podName
         );
     }
 
-    @GetMapping("/ka/client/{service}/duration/{duration}")
-    public void  clientTest(
-        @PathVariable("service") String service,
-        @PathVariable("duration") Duration duration
-    ) {
-        var restTemplate= new RestTemplateBuilder().rootUri("http://" + service).build();
+    @GetMapping("/keepalive/client")
+    public JsonNode clientTest() {
+        logger.info("client call");
+        Map<String, String> uriVars = Map.of();
 
-
-
+        return restTemplate.getForObject("/keepalive/server", JsonNode.class, uriVars);
     }
-
-
 }
-
