@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -19,7 +20,6 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 @RestController()
 public class KeepAliveController {
-
 
     private Logger logger = LoggerFactory.getLogger(KeepAliveController.class);
     private final String podName;
@@ -46,9 +46,9 @@ public class KeepAliveController {
 
     @GetMapping("/keepalive/client")
     public JsonNode clientTest() {
-        logger.info("client call");
         Map<String, String> uriVars = Map.of();
-
-        return restTemplate.getForObject("/keepalive/server", JsonNode.class, uriVars);
+        ResponseEntity<JsonNode> entity = restTemplate.getForEntity("/keepalive/server", JsonNode.class, uriVars);
+         logger.info(entity.toString());
+        return entity.getBody();
     }
 }
