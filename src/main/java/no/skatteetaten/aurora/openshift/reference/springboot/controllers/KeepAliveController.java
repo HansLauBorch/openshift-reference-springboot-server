@@ -21,10 +21,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 @RestController()
 public class KeepAliveController {
 
-    private Logger logger = LoggerFactory.getLogger(KeepAliveController.class);
     private final String podName;
     private final String auroraVersion;
     private final RestTemplate restTemplate;
+    private final Logger logger = LoggerFactory.getLogger(KeepAliveController.class);
 
     public KeepAliveController(
         @Value("${pod.name:localhost}") String podName,
@@ -48,7 +48,7 @@ public class KeepAliveController {
     public JsonNode clientTest() {
         Map<String, String> uriVars = Map.of();
         ResponseEntity<JsonNode> entity = restTemplate.getForEntity("/keepalive/server", JsonNode.class, uriVars);
-         logger.info(entity.toString());
+        logger.info(entity.toString());
         return entity.getBody();
     }
 }
