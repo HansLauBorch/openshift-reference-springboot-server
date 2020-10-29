@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -46,9 +47,18 @@ public class KeepAliveController {
 
     @GetMapping("/keepalive/client")
     public JsonNode clientTest() {
+        StopWatch watch = new StopWatch();
+        watch.start();
         Map<String, String> uriVars = Map.of();
         ResponseEntity<JsonNode> entity = restTemplate.getForEntity("/keepalive/server", JsonNode.class, uriVars);
-        logger.info(entity.toString());
+        watch.stop();
+        long totalTimeMillis = watch.getTotalTimeMillis();
+        String clientName = "";
+        if (entity.getBody() != null && entity.getBody().get("name") != null) {
+            clientName = entity.getBody().get("name").asText();
+        }
+        logger.info("response={} server={} client={} time={}", entity.getStatusCodeValue(), podName, clientName,
+            totalTimeMillis);
         return entity.getBody();
     }
 }
