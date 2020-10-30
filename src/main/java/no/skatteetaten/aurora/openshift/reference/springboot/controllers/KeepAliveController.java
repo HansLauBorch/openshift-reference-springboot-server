@@ -1,5 +1,6 @@
 package no.skatteetaten.aurora.openshift.reference.springboot.controllers;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.TextNode;
 
 /*
  * An example controller that shows how to do a REST call and how to do an operation with a operations metrics
@@ -38,7 +40,7 @@ public class KeepAliveController {
     }
 
     @GetMapping("/keepalive/server")
-    public Map<String, Object> serveTest(HttpServletRequest request) {
+    public Map<String, Object> serveTest() {
         return Map.of(
             "version", auroraVersion,
             "name", podName
@@ -49,16 +51,24 @@ public class KeepAliveController {
     public JsonNode clientTest() {
         StopWatch watch = new StopWatch();
         watch.start();
-        Map<String, String> uriVars = Map.of();
-        ResponseEntity<JsonNode> entity = restTemplate.getForEntity("/keepalive/server", JsonNode.class, uriVars);
-        watch.stop();
-        long totalTimeMillis = watch.getTotalTimeMillis();
-        String clientName = "";
-        if (entity.getBody() != null && entity.getBody().get("name") != null) {
-            clientName = entity.getBody().get("name").asText();
+        try {
+            Map<String, String> uriVars = Map.of();
+            ResponseEntity<JsonNode> entity = restTemplate.getForEntity("/keepalive/server", JsonNode.class, uriVars);
+            watch.stop();
+            long totalTimeMillis = watch.getTotalTimeMillis();
+            String clientName = "";
+            if (entity.getBody() != null && entity.getBody().get("name") != null) {
+                clientName = entity.getBody().get("name").asText();
+            }
+            List<String> strings = entity.getHeaders().get("Keep-Alive");
+            logger.info("response={} server={} client={} time={}ms keepalive={}", entity.getStatusCodeValue(), podName, clientName, totalTimeMillis, strings);
+            return entity.getBody();
+        } catch(Exception e){
+
+            watch.stop();
+            long totalTimeMillis = watch.getTotalTimeMillis();
+            logger.warn("File skjedde etter tid=" + totalTimeMillis, e);
+            return new TextNode("Tom");
         }
-        logger.info("response={} server={} client={} time={}", entity.getStatusCodeValue(), podName, clientName,
-            totalTimeMillis);
-        return entity.getBody();
     }
 }
