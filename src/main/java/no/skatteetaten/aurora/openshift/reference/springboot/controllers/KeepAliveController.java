@@ -3,8 +3,6 @@ package no.skatteetaten.aurora.openshift.reference.springboot.controllers;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,10 +59,10 @@ public class KeepAliveController {
                 clientName = entity.getBody().get("name").asText();
             }
             List<String> strings = entity.getHeaders().get("Keep-Alive");
-            logger.info("response={} server={} client={} time={}ms keepalive={}", entity.getStatusCodeValue(), podName, clientName, totalTimeMillis, strings);
+            logger.info("response={} server={} client={} time={}ms keepalive={}", entity.getStatusCodeValue(), podName,
+                clientName, totalTimeMillis, strings);
             return entity.getBody();
-        } catch(Exception e){
-
+        } catch (Exception e) {
             watch.stop();
             long totalTimeMillis = watch.getTotalTimeMillis();
             logger.warn("File skjedde etter tid=" + totalTimeMillis, e);
