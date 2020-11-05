@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 
 /*
  * An example controller that shows how to do a REST call and how to do an operation with a operations metrics
@@ -26,12 +25,18 @@ public class KeepAliveController {
     private final String auroraVersion;
     private final RestTemplate restTemplate;
     private final Logger logger = LoggerFactory.getLogger(KeepAliveController.class);
+    private final int number;
+    private final int wait;
 
     public KeepAliveController(
         @Value("${pod.name:localhost}") String podName,
         @Value("${aurora.version:local-dev}") String auroraVersion,
+        @Value("${keepalive.wait:200}") int wait,
+        @Value("${keepalive.number:1000}") int number,
         RestTemplate restTemplate) {
 
+        this.wait = wait;
+        this.number = number;
         this.restTemplate = restTemplate;
         this.podName = podName;
         this.auroraVersion = auroraVersion;
@@ -46,27 +51,35 @@ public class KeepAliveController {
     }
 
     @GetMapping("/keepalive/client")
-    public JsonNode clientTest() {
-        StopWatch watch = new StopWatch();
-        watch.start();
-        try {
-            Map<String, String> uriVars = Map.of();
-            ResponseEntity<JsonNode> entity = restTemplate.getForEntity("/keepalive/server", JsonNode.class, uriVars);
-            watch.stop();
-            long totalTimeMillis = watch.getTotalTimeMillis();
-            String clientName = "";
-            if (entity.getBody() != null && entity.getBody().get("name") != null) {
-                clientName = entity.getBody().get("name").asText();
+    public void clientTest() {
+        for (int i = 0; i < number; i++) {
+            StopWatch watch = new StopWatch();
+            watch.start();
+            try {
+                Thread.sleep(wait);
+                Map<String, String> uriVars = Map.of();
+                ResponseEntity<JsonNode> entity =
+                    restTemplate.getForEntity("/keepalive/server", JsonNode.class, uriVars);
+                watch.stop();
+                if (!entity.getStatusCode().is2xxSuccessful()) {
+                    long totalTimeMillis = watch.getTotalTimeMillis();
+                    String clientName = "";
+                    if (entity.getBody() != null && entity.getBody().get("name") != null) {
+                        clientName = entity.getBody().get("name").asText();
+                    }
+                    List<String> strings = entity.getHeaders().get("Keep-Alive");
+                    logger.info("response={} server={} client={} time={}ms keepalive={}", entity.getStatusCodeValue(),
+                        podName,
+                        clientName, totalTimeMillis, strings);
+                } else {
+                    logger.debug("{}", i);
+                }
+            } catch (Exception e) {
+                watch.stop();
+                long totalTimeMillis = watch.getTotalTimeMillis();
+                logger.warn("Feil skjedde etter tid=" + totalTimeMillis, e);
             }
-            List<String> strings = entity.getHeaders().get("Keep-Alive");
-            logger.info("response={} server={} client={} time={}ms keepalive={}", entity.getStatusCodeValue(), podName,
-                clientName, totalTimeMillis, strings);
-            return entity.getBody();
-        } catch (Exception e) {
-            watch.stop();
-            long totalTimeMillis = watch.getTotalTimeMillis();
-            logger.warn("File skjedde etter tid=" + totalTimeMillis, e);
-            return new TextNode("Tom");
         }
+        logger.info("Done {} requests", number);
     }
 }

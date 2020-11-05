@@ -29,12 +29,17 @@ spring:
 
 keepalive:
   host: "http://localhost:8080"
+  wait: 100
+  number: 10
 
 management:
     server.port: 8081
 
 
 logging:
+    level:
+        no.skatteetaten.aurora.openshift.reference.springboot: DEBUG
     pattern:
+
       console: "%d [%-9.9thread] %-5level %logger %X - %msg %n%rEx{full}"
 
