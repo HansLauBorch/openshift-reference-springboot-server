@@ -44,6 +44,7 @@ public class KeepAliveController {
 
     @GetMapping("/keepalive/server")
     public Map<String, Object> serveTest() {
+        logger.info("Received request");
         return Map.of(
             "version", auroraVersion,
             "name", podName

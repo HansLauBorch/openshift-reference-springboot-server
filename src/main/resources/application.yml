@@ -35,7 +35,6 @@ keepalive:
 management:
     server.port: 8081
 
-
 logging:
     level:
         no.skatteetaten.aurora.openshift.reference.springboot: DEBUG
