@@ -62,19 +62,15 @@ public class KeepAliveController {
                 ResponseEntity<JsonNode> entity =
                     restTemplate.getForEntity("/keepalive/server", JsonNode.class, uriVars);
                 watch.stop();
-                if (!entity.getStatusCode().is2xxSuccessful()) {
-                    long totalTimeMillis = watch.getTotalTimeMillis();
-                    String clientName = "";
-                    if (entity.getBody() != null && entity.getBody().get("name") != null) {
-                        clientName = entity.getBody().get("name").asText();
-                    }
-                    List<String> strings = entity.getHeaders().get("Keep-Alive");
-                    logger.info("response={} server={} client={} time={}ms keepalive={}", entity.getStatusCodeValue(),
-                        podName,
-                        clientName, totalTimeMillis, strings);
-                } else {
-                    logger.debug("{}", i);
+                long totalTimeMillis = watch.getTotalTimeMillis();
+                String clientName = "";
+                if (entity.getBody() != null && entity.getBody().get("name") != null) {
+                    clientName = entity.getBody().get("name").asText();
                 }
+                List<String> strings = entity.getHeaders().get("Keep-Alive");
+                logger.info("response={} server={} client={} time={}ms keepalive={}", entity.getStatusCodeValue(),
+                    podName,
+                    clientName, totalTimeMillis, strings);
             } catch (Exception e) {
                 watch.stop();
                 long totalTimeMillis = watch.getTotalTimeMillis();
