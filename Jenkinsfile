@@ -10,7 +10,7 @@ def config = [
     jiraFiksetIKomponentversjon: true,
     chatRoom                   : "#aos-notifications",
     compileProperties          : "-U",
-    buildStrategy              : "buildah",
+    buildStrategy              : "docker",
     versionStrategy            : [
         [branch: 'master', versionHint: '4'],
         [branch: 'release/v3', versionHint: '3'],
