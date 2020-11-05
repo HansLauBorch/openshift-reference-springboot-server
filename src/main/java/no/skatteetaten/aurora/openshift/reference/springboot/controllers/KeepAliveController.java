@@ -2,9 +2,11 @@ package no.skatteetaten.aurora.openshift.reference.springboot.controllers;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StopWatch;
@@ -54,6 +56,9 @@ public class KeepAliveController {
     @GetMapping("/keepalive/client")
     public void clientTest() {
         for (int i = 0; i < number; i++) {
+            String requestId = UUID.randomUUID().toString();
+            MDC.put("requestId", requestId);
+
             StopWatch watch = new StopWatch();
             watch.start();
             try {
