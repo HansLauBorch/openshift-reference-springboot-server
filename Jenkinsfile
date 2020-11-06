@@ -11,7 +11,7 @@ def config = [
     chatRoom                   : "#aos-notifications",
     openShiftBuilderVersion    : 'bugfix_AOT_1122_retag-SNAPSHOT',
     compileProperties          : "-U",
-    buildStrategy              : "buildah",
+    buildStrategy              : "docker",
     versionStrategy            : [
         [branch: 'master', versionHint: '4'],
         [branch: 'release/v3', versionHint: '3'],
