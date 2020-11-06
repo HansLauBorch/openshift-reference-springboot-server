@@ -9,6 +9,7 @@ def config = [
     nodeVersion                : '10',
     jiraFiksetIKomponentversjon: true,
     chatRoom                   : "#aos-notifications",
+    openShiftBuilderVersion    : 'bugfix_AOT_1122_retag-SNAPSHOT',
     compileProperties          : "-U",
     buildStrategy              : "buildah",
     versionStrategy            : [
