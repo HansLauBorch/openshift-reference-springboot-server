@@ -270,34 +270,6 @@
           </dependency>
         </dependencies>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <version>${maven-enforcer-plugin.version}</version>
-        <executions>
-          <execution>
-            <id>enforce</id>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <rules>
-            <requireMavenVersion>
-              <version>[${maven.min-version},)</version>
-            </requireMavenVersion>
-            <DependencyConvergence />
-            <requirePluginVersions>
-              <message>Best Practice is to always define plugin versions!</message>
-              <banLatest>true</banLatest>
-              <banRelease>true</banRelease>
-              <banSnapshots>true</banSnapshots>
-              <phases>clean,deploy,site</phases>
-            </requirePluginVersions>
-          </rules>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
 
@@ -330,9 +302,20 @@
       <version>${cglib-nodep.version}</version>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-tomcat</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-jetty</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
