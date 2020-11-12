@@ -25,7 +25,7 @@ def config = [
                           ]
                       ]],
     notifyBitbucket: "none", //We are on github
-    routeFormat: "@NAME@.@SEGMENT@.@ENV@.utv.paas.skead.no" //we use the new route format in the st-refapp test environment
+    routeFormat: "@NAME@.@SEGMENT@.@ENV@.apps.utv04.paas.skead.no" //we use the new route format in the st-refapp test environment
 ]
 fileLoader.withGit(config.pipelineScript, config.scriptVersion) {
   jenkinsfile = fileLoader.load('templates/systemtest')
