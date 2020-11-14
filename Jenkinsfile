@@ -11,8 +11,6 @@ def config = [
     chatRoom                   : "#aos-notifications",
     openShiftBuilderVersion    : 'bugfix_AOT_1122_retag-SNAPSHOT',
     compileProperties          : "-U",
-    openshiftUrl               : "https://api.utv04.paas.skead.no:6443",
-    buildStrategy              : "buildah",
     versionStrategy            : [
         [branch: 'master', versionHint: '4'],
         [branch: 'release/v3', versionHint: '3'],
