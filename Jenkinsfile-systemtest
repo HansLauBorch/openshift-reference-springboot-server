@@ -3,7 +3,7 @@
 def config = [
     scriptVersion       : 'feature/AOS-5018_jenkins-ocp4',
     pipelineScript      : 'https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git',
-    affiliation         : 'aup',
+    affiliation         : 'paas',
     credentialsId       : "github",
     javaVersion         : 11,
     nodeVersion         : '10',
