@@ -10,9 +10,6 @@ def config = [
     jiraFiksetIKomponentversjon: true,
     chatRoom                   : "#aos-notifications",
     compileProperties          : "-U",
-    buildStrategy              : "buildah",
-    openshiftUrl               : "https://api.utv04.paas.skead.no:6443",
-    auroraApiConfigFlags       : "--beta-multiple-cluster-types",
     versionStrategy            : [
         [branch: 'master', versionHint: '4'],
         [branch: 'release/v3', versionHint: '3'],
