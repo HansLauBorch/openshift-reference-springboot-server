@@ -1,32 +1,34 @@
 #!/usr/bin/env groovy
 
 def config = [
-    scriptVersion       : 'feature/AOS-5018_jenkins-ocp4',
-    pipelineScript      : 'https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git',
-    affiliation         : 'paas',
-    credentialsId       : "github",
-    openShiftSleepAfterSetup: 90,
+    scriptVersion                     : 'feature/AOS-5018_jenkins-ocp4',
+    pipelineScript                    : 'https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git',
+    affiliation                       : 'aup',
+    credentialsId                     : "github",
+    openShiftSleepAfterSetup          : 90,
     openShiftNamespaceSetupWaitTimeout: 240000,
-    javaVersion         : 11,
-    nodeVersion         : '10',
-    testStages          : [[
-                               auroraConfigEnvironment: 'st-refapp',
-                               applicationUnderTest   : "referanse",
-                               testSequence           : [
-                                   [
-                                       stageType : 'postman',
-                                       stageName : 'postman',
-                                       appDir    : "src/systemtest/postman",
-                                       npmCommand: 'test'
-                                   ], [
-                                       stageType: 'gatling',
-                                       stageName: 'gatling',
-                                       appDir   : 'gatling'
-                                   ]
-                               ]
-                           ]],
-    notifyBitbucket     : "none", //We are on github
-    routeFormat         : "@NAME@.@SEGMENT@.@ENV@.utv.paas.skead.no" //we use the new route format in the st-refapp test environment
+    javaVersion                       : 11,
+    nodeVersion                       : '10',
+    openshiftUrl                      : "https://api.utv04.paas.skead.no:6443",
+    auroraApiConfigFlags              : "--beta-multiple-cluster-types",
+    testStages                        : [[
+                                             auroraConfigEnvironment: 'st-refapp',
+                                             applicationUnderTest   : "referanse",
+                                             testSequence           : [
+                                                 [
+                                                     stageType : 'postman',
+                                                     stageName : 'postman',
+                                                     appDir    : "src/systemtest/postman",
+                                                     npmCommand: 'test'
+                                                 ], [
+                                                     stageType: 'gatling',
+                                                     stageName: 'gatling',
+                                                     appDir   : 'gatling'
+                                                 ]
+                                             ]
+                                         ]],
+    notifyBitbucket                   : "none", //We are on github
+    routeFormat                       : "@NAME@-@SEGMENT@-@ENV@.apps.utv04.paas.skead.no" //we use the new route format in the st-refapp test environment
 ]
 fileLoader.withGit(config.pipelineScript, config.scriptVersion) {
   jenkinsfile = fileLoader.load('templates/systemtest')
