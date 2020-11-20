@@ -5,6 +5,8 @@ def config = [
     pipelineScript      : 'https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git',
     affiliation         : 'paas',
     credentialsId       : "github",
+    openShiftSleepAfterSetup: 120,
+    openShiftNamespaceSetupWaitTimeout: 240000,
     javaVersion         : 11,
     nodeVersion         : '10',
     testStages          : [[
