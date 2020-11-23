@@ -24,16 +24,30 @@ logging:
 spring:
   profiles: local
   datasource:
-    url: ${refapp.datasource.url:jdbc:oracle:thin:@host:port/path}
-    username: ${refapp.datasource.username:username}
-    password: ${refapp.datasource.password:password}
-
+    url: ${refapp.datasource.url:jdbc:postgresql://localhost:5432/refapp}
+    username: ${refapp.datasource.username:postgres}
+    password: ${refapp.datasource.password:postgres}
 
 management:
     server.port: 8081
-
 
 logging:
     pattern:
       console: "%d [%-9.9thread] %-5level %logger %X - %msg %n%rEx{full}"
 
+s3:
+    buckets:
+        referanse-java:
+            serviceEndpoint: http://localhost:9000
+            accessKey: minio
+            secretKey: miniosecret
+            bucketName: default
+            objectPrefix: refapp
+            bucketRegion: us-east-1
+        referanse-java2:
+            serviceEndpoint: http://localhost:9000
+            accessKey: minio
+            secretKey: miniosecret
+            bucketName: default
+            objectPrefix: refapp2
+            bucketRegion: us-east-1

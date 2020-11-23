@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest
 import org.springframework.jdbc.core.JdbcTemplate
 
+import io.zonky.test.db.AutoConfigureEmbeddedDatabase
 import spock.lang.Specification
 
 @JdbcTest
+@AutoConfigureEmbeddedDatabase
 class CounterDatabaseServiceTest extends Specification {
 
   @Autowired

@@ -45,10 +45,17 @@
       "script": {
         "type": "text/javascript",
         "exec": [
-          "var prev = pm.variables.get('prevResponse');",
-          "var current =  pm.response.json().value;",
-          "tests['Check that previous value (' + prev + ') is less than current value (' + current + ').'] = current > prev;",
-          "pm.environment.set('prevResponse', current);"
+          "var statusKode = postman.getEnvironmentVariable(\"HTTP_OK\"); //statusKode = 200",
+          "tests[\"Statuskode returnert er \"+statusKode] = responseCode.code === parseInt(statusKode); //responseCode.code",
+          "if (responseCode.code === parseInt(statusKode)) {",
+            "var prev = pm.variables.get('prevResponse');",
+            "var current =  pm.response.json().value;",
+            "tests['Check that previous value (' + prev + ') is less than current value (' + current + ').'] = current > prev;",
+            "pm.environment.set('prevResponse', current);",
+          "}",
+          "else {",
+          "    tests[\"Responsen var ikke som forventet\"] = false;",
+          "}",
         ]
       }
     }

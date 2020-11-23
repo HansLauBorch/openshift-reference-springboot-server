@@ -2,6 +2,7 @@ package no.skatteetaten.aurora.openshift.reference.springboot.controllers
 
 import org.springframework.http.HttpStatus
 
+import no.skatteetaten.aurora.openshift.reference.springboot.controllers.errorhandling.ErrorHandler
 import spock.lang.Specification
 
 class ErrorHandlerTest extends Specification {

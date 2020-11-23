@@ -9,6 +9,7 @@ import org.springframework.restdocs.snippet.Snippet
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 
+import no.skatteetaten.aurora.openshift.reference.springboot.controllers.errorhandling.ErrorHandler
 import spock.lang.Specification
 
 abstract class AbstractControllerTest extends Specification {
