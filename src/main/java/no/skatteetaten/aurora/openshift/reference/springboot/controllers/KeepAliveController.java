@@ -33,6 +33,7 @@ public class KeepAliveController {
 
     private final String podName;
     private final String auroraVersion;
+    private final int postSize;
     private final RestTemplate restTemplate;
     private final Logger logger = LoggerFactory.getLogger(KeepAliveController.class);
     private final int number;
@@ -43,10 +44,12 @@ public class KeepAliveController {
         @Value("${aurora.version:local-dev}") String auroraVersion,
         @Value("${keepalive.wait:200}") int wait,
         @Value("${keepalive.number:1000}") int number,
+        @Value("${keepalive.max.postsizebyte:500000}") int postSize,
         RestTemplate restTemplate) {
 
         this.wait = wait;
         this.number = number;
+        this.postSize = postSize;
         this.restTemplate = restTemplate;
         this.podName = podName;
         this.auroraVersion = auroraVersion;
@@ -85,8 +88,9 @@ public class KeepAliveController {
             watch.start();
             try {
                 Thread.sleep(wait);
+                String randomText = "x".repeat(Math.max(2000, new Random().nextInt(postSize)));
                 ResponseEntity<String> entity =
-                    restTemplate.postForEntity("/keepalive/post", createText(), String.class);
+                    restTemplate.postForEntity("/keepalive/post", randomText, String.class);
                 watch.stop();
                 long totalTimeMillis = watch.getTotalTimeMillis();
                 List<String> strings = entity.getHeaders().get("Keep-Alive");
@@ -99,13 +103,7 @@ public class KeepAliveController {
                 logger.warn("Feil skjedde etter tid=" + totalTimeMillis, e);
             }
         }
-        logger.info("Done {} requests", number);
-    }
-
-    private String createText() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("x".repeat(Math.max(1, new Random().nextInt(5000))));
-        return sb.toString();
+        logger.info("Done {} posts", number);
     }
 
     @GetMapping("/keepalive/client")
