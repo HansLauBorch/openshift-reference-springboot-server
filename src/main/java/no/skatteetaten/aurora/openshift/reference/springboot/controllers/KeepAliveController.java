@@ -1,16 +1,24 @@
 package no.skatteetaten.aurora.openshift.reference.springboot.controllers;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -51,6 +59,53 @@ public class KeepAliveController {
             "version", auroraVersion,
             "name", podName
         );
+    }
+
+    @PostMapping(value = "/keepalive/post",produces = MediaType.TEXT_PLAIN_VALUE)
+    public void post(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+        try (InputStream is = request.getInputStream()) {
+            int input = 0;
+            while ( input != -1) {
+                count++;
+                input = is.read();
+            }
+        }
+        response.getWriter().println("End - read "+count+" bytes successfully.");
+    }
+
+    @GetMapping("/keepalive/clientpost")
+    public void clientPost() {
+        for (int i = 0; i < number; i++) {
+            String requestId = UUID.randomUUID().toString();
+            MDC.put("requestId", requestId);
+
+            StopWatch watch = new StopWatch();
+            watch.start();
+            try {
+                Thread.sleep(wait);
+                ResponseEntity<String> entity =
+                    restTemplate.postForEntity("/keepalive/post", createText(), String.class);
+                watch.stop();
+                long totalTimeMillis = watch.getTotalTimeMillis();
+                List<String> strings = entity.getHeaders().get("Keep-Alive");
+                logger.info("response={} server={} time={}ms keepalive={}", entity.getStatusCodeValue(),
+                    podName,
+                    totalTimeMillis, strings);
+            } catch (Exception e) {
+                watch.stop();
+                long totalTimeMillis = watch.getTotalTimeMillis();
+                logger.warn("Feil skjedde etter tid=" + totalTimeMillis, e);
+            }
+        }
+        logger.info("Done {} requests", number);
+    }
+
+    private String createText() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("x".repeat(Math.max(1, new Random().nextInt(5000))));
+        return sb.toString();
     }
 
     @GetMapping("/keepalive/client")
