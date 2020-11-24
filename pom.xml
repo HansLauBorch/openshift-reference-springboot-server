@@ -241,7 +241,7 @@
           </targetTests>
         </configuration>
       </plugin>
-      <plugin>
+      <!--<plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <executions>
@@ -269,7 +269,7 @@
             <version>${checkstyle-config.version}</version>
           </dependency>
         </dependencies>
-      </plugin>
+      </plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
