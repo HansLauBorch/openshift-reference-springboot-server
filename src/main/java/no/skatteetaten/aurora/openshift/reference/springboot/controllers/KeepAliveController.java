@@ -94,6 +94,7 @@ public class KeepAliveController {
         };
     }
 
+    private int reqCount = 0;
     /**
      * When testing, I find that this is never call, which is to be expected - i.e. no new calls
      * on an application which is shut down.
@@ -101,6 +102,9 @@ public class KeepAliveController {
     private void addHeaderConnectionCloseIfApplicable(HttpServletResponse response) {
         if (ShutdownHook.isHookCalled()) {
             logger.info("Shutdown has been called, add connection close to header");
+            response.addHeader("Connection","close");
+        } else if ( reqCount++ > 25 ) {
+            logger.info("Send connection close as I have answered 25 requests to see if that alliviates problem");
             response.addHeader("Connection","close");
         }
     }
