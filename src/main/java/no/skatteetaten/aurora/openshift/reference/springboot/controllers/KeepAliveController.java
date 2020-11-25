@@ -2,10 +2,12 @@ package no.skatteetaten.aurora.openshift.reference.springboot.controllers;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -78,9 +80,24 @@ public class KeepAliveController {
                 input = is.read();
             }
         }
+        response.setTrailerFields(trailingSupplier());
         response.getWriter().println("End - read "+count+" bytes successfully.");
     }
 
+    private Supplier<Map<String, String>> trailingSupplier() {
+        return () -> {
+            if (ShutdownHook.isHookCalled()) {
+                logger.info("Shutdown has been called, add connection close to header");
+                return Map.of("Connection","close");
+            }
+            return new HashMap<>();
+        };
+    }
+
+    /**
+     * When testing, I find that this is never call, which is to be expected - i.e. no new calls
+     * on an application which is shut down.
+     */
     private void addHeaderConnectionCloseIfApplicable(HttpServletResponse response) {
         if (ShutdownHook.isHookCalled()) {
             logger.info("Shutdown has been called, add connection close to header");
@@ -103,10 +120,11 @@ public class KeepAliveController {
                     restTemplate.postForEntity("/keepalive/post", randomText, String.class);
                 watch.stop();
                 long totalTimeMillis = watch.getTotalTimeMillis();
-                List<String> strings = entity.getHeaders().get("Keep-Alive");
-                logger.info("response={} server={} time={}ms keepalive={}", entity.getStatusCodeValue(),
+                List<String> keepAlive = entity.getHeaders().get("Keep-Alive");
+                List<String> connection = entity.getHeaders().get("Connection");
+                logger.info("response={} server={} time={}ms keepalive={} connection={}", entity.getStatusCodeValue(),
                     podName,
-                    totalTimeMillis, strings);
+                    totalTimeMillis, keepAlive, connection);
             } catch (Exception e) {
                 watch.stop();
                 long totalTimeMillis = watch.getTotalTimeMillis();
@@ -135,10 +153,11 @@ public class KeepAliveController {
                 if (entity.getBody() != null && entity.getBody().get("name") != null) {
                     clientName = entity.getBody().get("name").asText();
                 }
-                List<String> strings = entity.getHeaders().get("Keep-Alive");
-                logger.info("response={} server={} client={} time={}ms keepalive={}", entity.getStatusCodeValue(),
-                    podName,
-                    clientName, totalTimeMillis, strings);
+                List<String> keepAlive = entity.getHeaders().get("Keep-Alive");
+                List<String> connection = entity.getHeaders().get("Connection");
+                logger.info("response={} server={} client={} time={}ms keepalive={} connection={}", entity.getStatusCodeValue(),
+                    podName, clientName,
+                    totalTimeMillis, keepAlive, connection);
             } catch (Exception e) {
                 watch.stop();
                 long totalTimeMillis = watch.getTotalTimeMillis();
