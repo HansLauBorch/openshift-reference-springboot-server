@@ -24,6 +24,8 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import no.skatteetaten.aurora.openshift.reference.springboot.ShutdownHook;
+
 /*
  * An example controller that shows how to do a REST call and how to do an operation with a operations metrics
  * There should be a metric called http_client_requests http_server_requests and operations
@@ -56,7 +58,8 @@ public class KeepAliveController {
     }
 
     @GetMapping("/keepalive/server")
-    public Map<String, Object> serveTest() {
+    public Map<String, Object> serveTest(HttpServletResponse response) {
+        addHeaderConnectionCloseIfApplicable(response);
         logger.info("Received request");
         return Map.of(
             "version", auroraVersion,
@@ -66,7 +69,7 @@ public class KeepAliveController {
 
     @PostMapping(value = "/keepalive/post",produces = MediaType.TEXT_PLAIN_VALUE)
     public void post(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        StringBuilder sb = new StringBuilder();
+        addHeaderConnectionCloseIfApplicable(response);
         int count = 0;
         try (InputStream is = request.getInputStream()) {
             int input = 0;
@@ -76,6 +79,13 @@ public class KeepAliveController {
             }
         }
         response.getWriter().println("End - read "+count+" bytes successfully.");
+    }
+
+    private void addHeaderConnectionCloseIfApplicable(HttpServletResponse response) {
+        if (ShutdownHook.isHookCalled()) {
+            logger.info("Shutdown has been called, add connection close to header");
+            response.addHeader("Connection","close");
+        }
     }
 
     @GetMapping("/keepalive/clientpost")
