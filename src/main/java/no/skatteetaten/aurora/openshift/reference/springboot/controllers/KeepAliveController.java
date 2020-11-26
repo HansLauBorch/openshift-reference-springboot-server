@@ -103,7 +103,8 @@ public class KeepAliveController {
         if (ShutdownHook.isHookCalled()) {
             logger.info("Shutdown has been called, add connection close to header");
             response.addHeader("Connection","close");
-        } else if ( reqCount++ > 25 ) {
+        } else if ( false && reqCount++ > 25 ) {
+            // Turns out that if I do this, I generate more connection refused problems
             logger.info("Send connection close as I have answered 25 requests to see if that alliviates problem");
             response.addHeader("Connection","close");
         }
