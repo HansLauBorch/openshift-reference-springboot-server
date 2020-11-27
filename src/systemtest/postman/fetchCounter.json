@@ -1,28 +1,47 @@
 {
-	"info": {
-		"name": "fetchCounter",
-		"_postman_id": "f24b09dc-8119-30a9-01cb-4a679ac1f486",
-		"description": "",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "fetchCounter",
-			"request": {
-				"url": "http://{{referanse}}/api/counter",
-				"method": "GET",
-				"header": [
-					{
-						"key": "korrelasjonsid",
-						"value": "isolertsystemtest-{{$guid}}",
-						"description": ""
-					}
-				],
-				"description": ""
-			},
-			"response": []
-		}
-	],
+  "info": {
+    "_postman_id": "b7aefa70-f06a-45f1-be8f-e1f7d9746f20",
+    "name": "fetchCounter",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "fetchCounter",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "e93443e3-2801-42e6-a508-062a038a9c2c",
+            "exec": [
+              "tests[\"a\"] = false;"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "korrelasjonsid",
+            "value": "isolertsystemtest-{{$guid}}"
+          }
+        ],
+        "url": {
+          "raw": "http://{{referanse}}/api/counter",
+          "protocol": "http",
+          "host": [
+            "{{referanse}}"
+          ],
+          "path": [
+            "api",
+            "counter"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
   "event": [
     {
       "listen": "test",
@@ -30,8 +49,10 @@
         "type": "text/javascript",
         "exec": [
           "tests['a'] = false;"
-        ]
+        ],
+        "id": "ddcd3fa9-542f-47a4-8ece-59d50a5c2307"
       }
     }
-  ]
+  ],
+  "protocolProfileBehavior": {}
 }
