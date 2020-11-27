@@ -16,6 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.actuate.health.HealthContributor;
+import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StopWatch;
@@ -33,7 +36,7 @@ import no.skatteetaten.aurora.openshift.reference.springboot.ShutdownHook;
  * There should be a metric called http_client_requests http_server_requests and operations
  */
 @RestController()
-public class KeepAliveController {
+public class KeepAliveController implements HealthContributor, HealthIndicator {
 
     private final String podName;
     private final String auroraVersion;
@@ -170,5 +173,14 @@ public class KeepAliveController {
             }
         }
         logger.info("Done {} requests", number);
+    }
+
+    @Override
+    public Health health() {
+        if ( ShutdownHook.isHookCalled()) {
+            logger.info("Health call after shutdownhook has been executed. Not expected.");
+            return Health.down().withDetail("k15321-test","hook-called").build();
+        }
+        return Health.up().withDetail("k15321-test","OK").build();
     }
 }
