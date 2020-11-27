@@ -19,7 +19,8 @@ def config = [
                                                      stageType : 'postman',
                                                      stageName : 'postman',
                                                      appDir    : "src/systemtest/postman",
-                                                     npmCommand: 'test'
+                                                     npmCommand: 'test',
+                                                     allowFailure: true
                                                  ], [
                                                      stageType: 'gatling',
                                                      stageName: 'gatling',
