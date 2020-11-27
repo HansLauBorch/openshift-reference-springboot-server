@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 def config = [
-    scriptVersion              : 'feature/AOS-5018_jenkins-ocp4',
+    scriptVersion              : 'feature/AOS-5091',
     iqOrganizationName         : 'Team AOS',
     pipelineScript             : 'https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git',
     iqEmbedded: true,
