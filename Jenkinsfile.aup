@@ -3,7 +3,7 @@ def config = [
     scriptVersion              : 'feature/AOS-5018_jenkins-ocp4',
     iqOrganizationName         : 'Team AOS',
     pipelineScript             : 'https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git',
-    downstreamSystemtestJob    : [branch: env.BRANCH_NAME],
+    iqEmbedded: true,
     credentialsId              : "github",
     javaVersion                : 11,
     nodeVersion                : '10',
