@@ -17,6 +17,7 @@ def config = [
     compileProperties          : "-U",
     versionStrategy            : [
         [branch: 'master', versionHint: '4'],
+        [branch: 'feature/AOS-5118', versionHint: '0'],
         [branch: 'release/v3', versionHint: '3'],
         [branch: 'release/v2', versionHint: '2'],
         [branch: 'release/v1', versionHint: '1']
