@@ -37,6 +37,15 @@
         "description": ""
       },
       "response": []
+    },
+    {
+      "name": "FAIL",
+      "request": {
+        "url": "http://{{referanse}}/api/fail",
+        "method": "GET",
+        "description": ""
+      },
+      "response": []
     }
 	],
   "event": [
