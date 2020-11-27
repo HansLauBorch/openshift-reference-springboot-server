@@ -47,7 +47,7 @@
         "exec": [
           "var prev = pm.variables.get('prevResponse');",
           "var current =  pm.response.json().value;",
-          "tests['Check that previous value (' + prev + ') is less than current value (' + current + ').'] = current == prev;",
+          "pm.test('Check that previous value (' + prev + ') is less than current value (' + current + ').', function () {\npm.expect(current).to.be(prev);\n});",
           "pm.environment.set('prevResponse', current);"
         ]
       }
