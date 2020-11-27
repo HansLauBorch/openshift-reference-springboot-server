@@ -8,6 +8,7 @@ def config = [
     openShiftSleepAfterSetup          : 90,
     openShiftNamespaceSetupWaitTimeout: 240000,
     javaVersion                       : 11,
+    chatRoom: "#aos-notifications",
     nodeVersion                       : '10',
     openshiftUrl                      : "https://api.utv04.paas.skead.no:6443",
     auroraApiConfigFlags              : "--beta-multiple-cluster-types",
