@@ -11,7 +11,6 @@ def config = [
     jiraDoNotUpdateCompleted   : true,
     openShiftBuild             : false,
     chatRoom                   : "#aos-notifications",
-    buildStrategy              : "buildah",
     openshiftUrl               : "https://api.utv04.paas.skead.no:6443",
     auroraApiConfigFlags       : "--beta-multiple-cluster-types",
     compileProperties          : "-U",
