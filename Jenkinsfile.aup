@@ -1,14 +1,15 @@
 #!/usr/bin/env groovy
 def config = [
-    scriptVersion              : 'feature/AOS-5018_jenkins-ocp4',
+    scriptVersion              : 'AOS-4806',
     iqOrganizationName         : 'Team AOS',
     pipelineScript             : 'https://git.aurora.skead.no/scm/ao/aurora-pipeline-scripts.git',
     downstreamSystemtestJob    : [branch: env.BRANCH_NAME],
     credentialsId              : "github",
+    disableAllReports: true,
+    iq: true,
+    sporing: false,
     javaVersion                : 11,
     nodeVersion                : '10',
-    jiraFiksetIKomponentversjon: true,
-    chatRoom                   : "#aos-notifications",
     buildStrategy              : "buildah",
     openshiftUrl               : "https://api.utv04.paas.skead.no:6443",
     auroraApiConfigFlags       : "--beta-multiple-cluster-types",
