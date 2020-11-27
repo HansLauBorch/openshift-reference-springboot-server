@@ -6,7 +6,7 @@ def config = [
     downstreamSystemtestJob    : [branch: env.BRANCH_NAME],
     credentialsId              : "github",
     disableAllReports: true,
-    iq: true,
+    iq: false,
     sporing: false,
     javaVersion                : 11,
     nodeVersion                : '10',
