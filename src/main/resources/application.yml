@@ -8,6 +8,9 @@ spring:
     profiles:
         active: local
 
+management:
+    server.port: 8081
+    endpoint.health.status.http-mapping.down: 503
 
 logging:
     level:
@@ -31,10 +34,6 @@ keepalive:
   host: "http://localhost:8080"
   wait: 100
   number: 10
-
-management:
-    server.port: 8081
-    endpoint.health.status.http-mapping.down: 503
 
 logging:
     level:
