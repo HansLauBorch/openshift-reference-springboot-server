@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.health.Health;
-import org.springframework.boot.actuate.health.HealthContributor;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +35,7 @@ import no.skatteetaten.aurora.openshift.reference.springboot.ShutdownHook;
  * There should be a metric called http_client_requests http_server_requests and operations
  */
 @RestController()
-public class KeepAliveController implements HealthContributor, HealthIndicator {
+public class KeepAliveController implements HealthIndicator {
 
     private final String podName;
     private final String auroraVersion;
@@ -112,6 +111,17 @@ public class KeepAliveController implements HealthContributor, HealthIndicator {
             response.addHeader("Connection","close");
         }
     }
+    @GetMapping("/keepalive/unhealthy")
+    public void unhealthy(HttpServletResponse response) throws IOException {
+        ShutdownHook.setManualUnhealthy(true);
+        response.getWriter().println("Health endpoint will report unhealthy.");
+    }
+
+    @GetMapping("/keepalive/healthy")
+    public void healthy(HttpServletResponse response) throws IOException {
+        ShutdownHook.setManualUnhealthy(false);
+        response.getWriter().println("Health endpoint will report healthy.");
+    }
 
     @GetMapping("/keepalive/clientpost")
     public void clientPost() {
@@ -177,6 +187,9 @@ public class KeepAliveController implements HealthContributor, HealthIndicator {
 
     @Override
     public Health health() {
+        if ( ShutdownHook.isManualUnhealthy() ) {
+            return Health.down().withDetail("k15321-test","Manually-unhealthy-called").build();
+        }
         if ( ShutdownHook.isHookCalled()) {
             logger.info("Health call after shutdownhook has been executed. Not expected.");
             return Health.down().withDetail("k15321-test","hook-called").build();

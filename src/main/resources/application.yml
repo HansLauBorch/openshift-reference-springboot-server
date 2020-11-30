@@ -34,6 +34,7 @@ keepalive:
 
 management:
     server.port: 8081
+    endpoint.health.status.http-mapping.down: 503
 
 logging:
     level:

@@ -8,8 +8,21 @@ public class ShutdownHook extends Thread {
 
     private static boolean hookCalled = false;
 
+    /**
+     * Test flag which will give health false, to be called from pre-shutdown hook
+     */
+    private static boolean manualUnhealthy = false;
+
     public static boolean isHookCalled() {
         return hookCalled;
+    }
+
+    public static boolean isManualUnhealthy() {
+        return manualUnhealthy;
+    }
+
+    public static void setManualUnhealthy(boolean manualUnhealthy) {
+        ShutdownHook.manualUnhealthy = manualUnhealthy;
     }
 
     @Override
