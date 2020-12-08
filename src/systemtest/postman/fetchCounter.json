@@ -55,7 +55,7 @@
           "}",
           "else {",
           "    tests[\"Responsen var ikke som forventet\"] = false;",
-          "}",
+          "}"
         ]
       }
     }
