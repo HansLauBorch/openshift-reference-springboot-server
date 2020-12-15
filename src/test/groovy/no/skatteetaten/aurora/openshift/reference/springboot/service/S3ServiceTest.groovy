@@ -1,13 +1,13 @@
 package no.skatteetaten.aurora.openshift.reference.springboot.service
 
+import java.util.function.Consumer
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest
-import org.springframework.test.context.ContextConfiguration
 
 import io.findify.s3mock.S3Mock
 import no.skatteetaten.aurora.openshift.reference.springboot.ApplicationConfig
 import no.skatteetaten.aurora.openshift.reference.springboot.service.dto.S3Configuration
-import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest
 import spock.lang.Specification
 
@@ -24,7 +24,8 @@ class S3ServiceTest extends Specification {
   def "Verify is able to store and retrieve object from minio with default bucket"() {
     given:
       s3Mock.start()
-      s3Config.s3Client.createBucket(CreateBucketRequest.builder().bucket("default").build())
+      s3Config.s3Client.createBucket(
+          CreateBucketRequest.builder().bucket("default").build() as CreateBucketRequest)
       def expectedFileContent = "my awesome test file"
 
     when:
@@ -41,7 +42,7 @@ class S3ServiceTest extends Specification {
   def "Verify is able to store and retrieve object from minio with other bucket"() {
     given:
       s3Mock.start()
-      s3Config.s3Client.createBucket(CreateBucketRequest.builder().bucket("default").build())
+      s3Config.s3Client.createBucket(CreateBucketRequest.builder().bucket("default").build() as CreateBucketRequest)
       def expectedFileContent = "my awesome test file2"
 
     when:

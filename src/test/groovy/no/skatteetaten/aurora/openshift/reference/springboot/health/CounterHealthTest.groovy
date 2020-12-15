@@ -1,7 +1,5 @@
 package no.skatteetaten.aurora.openshift.reference.springboot.health
 
-import org.springframework.boot.actuate.health.Health
-
 import no.skatteetaten.aurora.openshift.reference.springboot.service.CounterDatabaseService
 import spock.lang.Specification
 
