@@ -23,7 +23,10 @@ logging:
 ---
 spring:
   profiles: local
-
+server:
+    error:
+        whitelabel:
+            enabled: false
 management:
     server.port: 8081
 
