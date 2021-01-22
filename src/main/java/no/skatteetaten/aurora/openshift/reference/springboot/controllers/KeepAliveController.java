@@ -19,7 +19,9 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
-import org.springframework.boot.devtools.remote.client.HttpHeaderInterceptor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StopWatch;
@@ -97,8 +99,6 @@ public class KeepAliveController implements HealthIndicator {
             try {
                 Thread.sleep(wait);
                 String randomText = "x".repeat(Math.max(MINIMUM_POST_SIZE, new Random().nextInt(postSize)));
-                addInterceptToRestTemplate();
-
                 ResponseEntity<String> entity =
                     restTemplate.postForEntity("/keepalive/post", randomText, String.class);
                 watch.stop();
@@ -128,10 +128,14 @@ public class KeepAliveController implements HealthIndicator {
             watch.start();
             try {
                 Thread.sleep(wait);
-                Map<String, String> uriVars = Map.of();
-                addInterceptToRestTemplate();
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+                headers.add("Authorization", "Bearer "+ Files.readString(Paths.get(psatPath)));
+                HttpEntity<String> headerEntity = new HttpEntity<>(headers);
+
                 ResponseEntity<JsonNode> entity =
-                    restTemplate.getForEntity("/keepalive/server", JsonNode.class, uriVars);
+                    restTemplate.exchange("/keepalive/server", HttpMethod.GET, headerEntity, JsonNode.class, Map.of());
                 watch.stop();
                 long totalTimeMillis = watch.getTotalTimeMillis();
                 String clientName = "";
@@ -151,19 +155,6 @@ public class KeepAliveController implements HealthIndicator {
             }
         }
         logger.info("Done {} requests", number);
-    }
-
-    /**
-     * Repeatedly setting this, as the psat might be old
-     */
-    private void addInterceptToRestTemplate() {
-        try {
-            // TODO Cache this
-            String psat = Files.readString(Paths.get(psatPath));
-            restTemplate.setInterceptors(Collections.singletonList(new HttpHeaderInterceptor("Authorization", "Bearer "+ psat)));
-        } catch (IOException e) {
-            logger.error("Could not read "+ psatPath, e);
-        }
     }
 
     @Override
