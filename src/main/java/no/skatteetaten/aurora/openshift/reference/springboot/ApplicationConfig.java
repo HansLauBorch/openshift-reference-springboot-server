@@ -2,6 +2,8 @@ package no.skatteetaten.aurora.openshift.reference.springboot;
 
 import java.net.URI;
 
+import no.skatteetaten.aurora.filter.logging.AuroraHeaderFilter;
+import no.skatteetaten.aurora.filter.logging.RequestKorrelasjon;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -23,7 +25,9 @@ public class ApplicationConfig {
 
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        return builder.build();
+        return builder
+                .defaultHeader(AuroraHeaderFilter.KORRELASJONS_ID, RequestKorrelasjon.getId())
+                .build();
     }
 
     @Primary
