@@ -6,6 +6,8 @@ import static no.skatteetaten.aurora.AuroraMetrics.StatusValue.OK;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +28,7 @@ import no.skatteetaten.aurora.openshift.reference.springboot.service.S3Service;
 @RestController
 public class ExampleController {
 
+    private final Logger logger = LoggerFactory.getLogger(ExampleController.class);
     private static final String SOMETIMES = "sometimes";
     private static final int SECOND = 1000;
     private RestTemplate restTemplate;
@@ -44,6 +47,8 @@ public class ExampleController {
         JsonNode forEntity = restTemplate.getForObject("http://httpbin.org/ip", JsonNode.class);
         Map<String, Object> response = new HashMap<>();
         response.put("ip", forEntity.get("origin").textValue());
+        logger.info("Server ip={}", response.get("ip"));
+
         return response;
     }
 
