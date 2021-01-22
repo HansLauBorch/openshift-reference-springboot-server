@@ -3,6 +3,8 @@ package no.skatteetaten.aurora.openshift.reference.springboot.controllers.errorh
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,6 +21,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class ErrorHandler extends ResponseEntityExceptionHandler {
 
+    private final Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
+
     @ExceptionHandler({ RuntimeException.class })
     protected ResponseEntity<Object> handleGenericError(RuntimeException e, WebRequest request) {
         return handleException(e, request, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -31,6 +35,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 
     private ResponseEntity<Object> handleException(final RuntimeException e, WebRequest request,
         HttpStatus httpStatus) {
+        logger.warn(e.getMessage());
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
