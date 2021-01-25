@@ -28,7 +28,7 @@ public class ApplicationConfig {
 
     @Bean
     public OpenShiftTokenReviewService openShiftTokenReview(
-        @Value("${pod.psat.path:/tmp/client-sa}") String serviceTokenPath, // TODO Change to path to app service account, /run/secrets/kubernetes.io/serviceaccount/token
+        @Value("${pod.service.account.token.path:/tmp/client-sa}") String serviceTokenPath, // TODO Change to path to app service account, /run/secrets/kubernetes.io/serviceaccount/token
         @Value("${pod.psat.tokenreviewer:https://api.utv04.paas.skead.no/apis/authentication.k8s.io/v1/tokenreviews}") String tokenReviewUrl
     ) {
         HttpClient client = HttpClient.newBuilder()

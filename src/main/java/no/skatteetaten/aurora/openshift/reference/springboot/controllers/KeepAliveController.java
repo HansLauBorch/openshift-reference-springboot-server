@@ -118,8 +118,9 @@ public class KeepAliveController implements HealthIndicator {
     }
 
     @GetMapping("/keepalive/client")
-    public void clientTest() {
+    public ResponseEntity.BodyBuilder clientTest() {
         logger.info("Calling endpoint with psat token {} time(s).", number);
+        int lastStatus = -1;
         for (int i = 0; i < number; i++) {
             String requestId = UUID.randomUUID().toString();
             MDC.put("requestId", requestId);
@@ -148,6 +149,7 @@ public class KeepAliveController implements HealthIndicator {
                     entity.getStatusCodeValue(),
                     podName, clientName,
                     totalTimeMillis, keepAlive, connection);
+                lastStatus = entity.getStatusCodeValue();
             } catch (Exception e) {
                 watch.stop();
                 long totalTimeMillis = watch.getTotalTimeMillis();
@@ -155,6 +157,7 @@ public class KeepAliveController implements HealthIndicator {
             }
         }
         logger.info("Done {} requests", number);
+        return ResponseEntity.status(lastStatus);
     }
 
     @Override

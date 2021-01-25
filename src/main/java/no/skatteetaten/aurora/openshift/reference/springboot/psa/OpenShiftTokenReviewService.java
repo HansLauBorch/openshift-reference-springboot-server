@@ -9,9 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.Base64;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 public class OpenShiftTokenReviewService {
     private static final Logger logger = LoggerFactory.getLogger(OpenShiftTokenReviewService.class);
 
-    private static final ObjectReader JSON_MAP_READER = new ObjectMapper().readerFor(Map.class);
     private static final ObjectWriter REVIEW_WRITER = new ObjectMapper().writerFor(TokenReview.class);
     private static final ObjectReader REVIEW_READER = new ObjectMapper().readerFor(TokenReview.class);
     private final HttpClient httpClient;
@@ -68,10 +65,10 @@ public class OpenShiftTokenReviewService {
         HttpResponse<String> response = httpClient.send(post, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() / 100 == 2) {
             String reviewAsString = response.body();
-            //logger.info("-- tokenreview --------> "+reviewAsString);
+            logger.info("-- tokenreview --------> "+reviewAsString); // TODO Temporary
             TokenReview review = REVIEW_READER.readValue(reviewAsString);
             if (!review.status.authenticated) {
-                logger.debug("Token is not authenticated");
+                logger.warn("Token is not authenticated");
                 return false;
             }
             return hasAccess(review.status.user.username);
@@ -95,7 +92,7 @@ public class OpenShiftTokenReviewService {
         if (username.startsWith("system:serviceaccount:")) {
             return true;
         } else {
-            logger.debug("User {} has no access", username);
+            logger.warn("User {} has no access", username);
             return false;
         }
     }
@@ -105,15 +102,6 @@ public class OpenShiftTokenReviewService {
             throw new IllegalArgumentException("Unable to parse token");
         }
         return authHeader.substring("Bearer ".length());
-    }
-
-    private static String findIssuer(String piece) {
-        try {
-            Map<String, Object> body = JSON_MAP_READER.readValue(Base64.getDecoder().decode(piece));
-            return body.getOrDefault("iss", "").toString();
-        } catch (IOException e) {
-            return "";
-        }
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
