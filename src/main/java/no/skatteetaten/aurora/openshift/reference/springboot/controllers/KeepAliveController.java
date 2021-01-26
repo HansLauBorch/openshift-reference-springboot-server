@@ -118,7 +118,7 @@ public class KeepAliveController implements HealthIndicator {
     }
 
     @GetMapping("/keepalive/client")
-    public ResponseEntity.BodyBuilder clientTest() {
+    public ResponseEntity<String> clientTest() {
         logger.info("Calling endpoint with psat token {} time(s).", number);
         int lastStatus = -1;
         for (int i = 0; i < number; i++) {
@@ -157,7 +157,7 @@ public class KeepAliveController implements HealthIndicator {
             }
         }
         logger.info("Done {} requests", number);
-        return ResponseEntity.status(lastStatus);
+        return ResponseEntity.status(lastStatus).body("Done "+number+" requests, last with current status code");
     }
 
     @Override

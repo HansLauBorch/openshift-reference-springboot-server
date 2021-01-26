@@ -58,7 +58,7 @@ public class OpenShiftTokenReviewService {
             .header("Content-Type", "application/json")
             .header("Accept", "application/json")
             //Used to set Manager field in the returned structure
-            .header("User-Agent", "k15321-agent") // TODO Use something sensible, gets logged as manager
+            .header("User-Agent", "psat-agent") // TODO Use something sensible
             .POST(HttpRequest.BodyPublishers.ofString(REVIEW_WRITER.writeValueAsString(tokenReview)))
             .build();
 
@@ -87,7 +87,7 @@ public class OpenShiftTokenReviewService {
      */
     private boolean hasAccess(String username) {
         //if (username.startsWith("system:serviceaccount:aurora:")) {
-        // Currently accepting any service account
+        // TODO Currently accepting any service account
         logger.info("SA: "+username);
         if (username.startsWith("system:serviceaccount:")) {
             return true;
