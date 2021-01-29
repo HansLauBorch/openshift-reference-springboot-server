@@ -26,6 +26,7 @@ public class ApplicationConfig {
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder
+            // If Korrelasjonsid is part of the incoming request it will be used further or else it will be generated.
             .defaultHeader(AuroraHeaderFilter.KORRELASJONS_ID, RequestKorrelasjon.getId())
             .build();
     }

@@ -47,7 +47,7 @@ public class ExampleController {
         JsonNode forEntity = restTemplate.getForObject("http://httpbin.org/ip", JsonNode.class);
         Map<String, Object> response = new HashMap<>();
         response.put("ip", forEntity.get("origin").textValue());
-        logger.info("Server ip={}", response.get("ip"));
+        logger.info("Httpbin ip={}", response.get("ip"));
 
         return response;
     }

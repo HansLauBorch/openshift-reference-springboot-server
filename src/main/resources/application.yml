@@ -10,6 +10,8 @@ spring:
     datasource:
         # Change the maximum pool size if your application needs it.
         hikari.maximumPoolSize: 3
+    sleuth:
+        enabled: false
 
 logging:
     level:
