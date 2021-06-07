@@ -19,7 +19,7 @@
   </parent>
 
   <properties>
-    <aurora.starters.version>1.0.10</aurora.starters.version>
+    <aurora.starters.version>1.1.7</aurora.starters.version>
     <java.version>11</java.version>
     <maven.min-version>3.5.0</maven.min-version>
 
