@@ -68,7 +68,7 @@ Default `maxmimumPoolSize` for Hikary is **10**. This has been reduced to **3** 
 
 ## Starters
 
-The application has one starter  [aurora-springboot2-starter](https://github.com/Skatteetaten/aurora-springboot2-starter/tree/master) in order to set up normal aurora requirements such as
+The application requires the starter  [aurora-spring-boot-mvc-starter](https://github.com/Skatteetaten/aurora-spring-boot-mvc-starter/tree/master) in order to set up normal aurora requirements such as
  - grouping properties into their own property sources
  - setting default properties for actuator
  - instrumenting RestTemplates with metrics
@@ -178,7 +178,7 @@ mechanisms.
 ### /prometheus - Metrics   
 
 The reference application sets up metrics as described in the 
-[aurora-springboot2-starter](https://github.com/Skatteetaten/aurora-springboot2-starter/tree/master)
+[aurora-spring-boot-mvc-starter](https://github.com/Skatteetaten/aurora-spring-boot-mvc-starter/tree/master)
 
 For applications that are deployed to OpenShift, metrics exposed at ```/prometheus``` (default, configurable) in the
 format required by Prometheus will be automatically scraped.

@@ -22,7 +22,9 @@ logging:
 
 ---
 spring:
-  profiles: local
+  config:
+    activate:
+      on-profile: local
   datasource:
     url: ${refapp.datasource.url:jdbc:postgresql://localhost:5432/refapp}
     username: ${refapp.datasource.username:postgres}
