@@ -75,6 +75,7 @@ The application requires the starter  [aurora-spring-boot-mvc-starter](https://g
  - instrument ServerFilter with metrics
  - instrument logback with metrics
  
+Aurora also provides another starter, [aurora-spring-boot-webflux-starter](https://github.com/Skatteetaten/aurora-spring-boot-webflux-starter), which is intended for reactive applications.
 
 ## Log Configuration
 
