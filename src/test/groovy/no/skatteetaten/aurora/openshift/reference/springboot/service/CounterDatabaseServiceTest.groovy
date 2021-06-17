@@ -7,8 +7,10 @@ import org.springframework.jdbc.core.JdbcTemplate
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase
 import spock.lang.Specification
 
+import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY
+
 @JdbcTest
-@AutoConfigureEmbeddedDatabase
+@AutoConfigureEmbeddedDatabase(provider = ZONKY)
 class CounterDatabaseServiceTest extends Specification {
 
   @Autowired
