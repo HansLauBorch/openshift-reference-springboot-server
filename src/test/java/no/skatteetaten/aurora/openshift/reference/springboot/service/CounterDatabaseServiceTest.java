@@ -2,6 +2,8 @@ package no.skatteetaten.aurora.openshift.reference.springboot.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.*;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 
 @JdbcTest
-@AutoConfigureEmbeddedDatabase
+@AutoConfigureEmbeddedDatabase(provider = ZONKY)
 class CounterDatabaseServiceTest {
 
     @Autowired
