@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import no.skatteetaten.aurora.AuroraMetrics;
 import no.skatteetaten.aurora.openshift.reference.springboot.controllers.dto.S3FileContentRequest;
 import no.skatteetaten.aurora.openshift.reference.springboot.controllers.dto.S3FileContentResponse;
+import no.skatteetaten.aurora.openshift.reference.springboot.service.ExampleService;
 import no.skatteetaten.aurora.openshift.reference.springboot.service.S3Service;
 
 /*
@@ -27,15 +28,19 @@ import no.skatteetaten.aurora.openshift.reference.springboot.service.S3Service;
 public class ExampleController {
 
     private static final String SOMETIMES = "sometimes";
-    private static final int SECOND = 1000;
     private RestTemplate restTemplate;
     private AuroraMetrics metrics;
     private S3Service storageService;
+    private ExampleService exampleService;
 
-    public ExampleController(RestTemplate restTemplate, AuroraMetrics metrics, S3Service storageService) {
+    public ExampleController(RestTemplate restTemplate,
+        AuroraMetrics metrics,
+        S3Service storageService,
+        ExampleService exampleService) {
         this.storageService = storageService;
         this.restTemplate = restTemplate;
         this.metrics = metrics;
+        this.exampleService = exampleService;
     }
 
     @GetMapping("/api/example/ip")
@@ -50,7 +55,7 @@ public class ExampleController {
     @GetMapping("/api/example/sometimes")
     public Map<String, Object> example() {
         return metrics.withMetrics(SOMETIMES, () -> {
-            boolean wasSuccessful = performOperationThatMayFail();
+            boolean wasSuccessful = exampleService.performOperationThatMayFail();
             if (wasSuccessful) {
                 metrics.status(SOMETIMES, OK);
                 Map<String, Object> response = new HashMap<>();
@@ -70,20 +75,6 @@ public class ExampleController {
         String storedFileContent =
             storageService.getFileContent(request.getFileName(), request.isUseDefaultBucketObjectArea());
         return new S3FileContentResponse(storedFileContent);
-    }
-
-    protected boolean performOperationThatMayFail() {
-
-        long sleepTime = (long) (Math.random() * SECOND);
-
-        try {
-            Thread.sleep(sleepTime);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException("Sleep interupted", e);
-        }
-
-        return sleepTime % 2 == 0;
     }
 }
 
