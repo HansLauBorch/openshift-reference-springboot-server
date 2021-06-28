@@ -1,6 +1,6 @@
 # Spring Boot Reference Application
 
-This version of the reference application is based upon springboot v2, look in the release/v1 branch for a version based upon springboot v1
+This version of the reference application is based upon springboot v2, look in the release/v1 branch for a version based upon springboot v1 
 
 If your team has not migrated to v7 of Jenkins pipeline yet look at the release/v3 branch for the latest reference application on v6 pipeline version.
 
