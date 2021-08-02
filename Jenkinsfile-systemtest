@@ -23,8 +23,11 @@ def config = [
                                            stageType: 'gatling',
                                            stageName: 'gatling',
                                            appDir   : 'gatling'
-                                       ]
-                                   ]
+                                       ], [
+                                           stageType: 'maven',
+                                           stageName: 'maven',
+                                           goal: 'test'
+                                   ]]
                                ]],
     notifyBitbucket         : "none", //We are on github
     routeFormat             : "@NAME@.@SEGMENT@.@ENV@.utv.paas.skead.no" //we use the new route format in the st-refapp test environment
