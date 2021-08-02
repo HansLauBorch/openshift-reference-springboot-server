@@ -27,7 +27,8 @@ def config = [
                                            stageType: 'maven',
                                            stageName: 'maven',
                                            appDir: '.',
-                                           goal: 'test'
+                                           goal: 'test',
+                                           targetUrlParameter: true
                                    ]]
                                ]],
     notifyBitbucket         : "none", //We are on github
