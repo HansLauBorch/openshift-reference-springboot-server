@@ -26,6 +26,7 @@ def config = [
                                        ], [
                                            stageType: 'maven',
                                            stageName: 'maven',
+                                           appDir: '.',
                                            goal: 'test'
                                    ]]
                                ]],
